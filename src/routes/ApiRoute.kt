@@ -3,16 +3,16 @@ package wfp2.flatlife.routes
 import io.ktor.routing.*
 
 fun Route.apiRoute() {
-    route("/tasks/") {
+    route("/tasks") {
         taskRoutes()
     }
-    route("/shopping/") {
+    route("/shopping") {
         shoppingRoutes()
     }
-    route("/finance/") {
+    route("/finance") {
         financeRoutes()
     }
-    route("/chores/") {
+    route("/chores") {
         choreRoutes()
     }
 }

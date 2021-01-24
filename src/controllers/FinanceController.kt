@@ -2,13 +2,11 @@ package wfp2.flatlife.controllers
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
-import wfp2.flatlife.data.models.FinanceActivities
-import wfp2.flatlife.data.models.FinanceActivity
-import wfp2.flatlife.data.models.FinanceActivityEntity
+import wfp2.flatlife.data.models.*
 
 class FinanceController {
 
-    fun getAllItemsForUser(): List<FinanceActivity> = transaction {
+    fun getAllActivities(): List<FinanceActivity> = transaction {
         FinanceActivityEntity.all().map(FinanceActivityEntity::toFinanceActivity)
         //TODO TaskEntity.all().filter { username in it.owners }.map(TaskEntity::toTask)
     }
@@ -29,11 +27,11 @@ class FinanceController {
         item.id
     }
 
-    fun addItem(item: FinanceActivity) = transaction {
+    fun addFinanceActivity(item: FinanceActivity) = transaction {
         if (FinanceActivityEntity.findById(item.id.toInt()) == null) {
             FinanceActivityEntity.new {
                 this.description = item.description
-                this.description = item.categoryName
+                this.categoryName = item.categoryName
                 this.price = item.price
                 this.createdAt = item.createdAt
             }.id.value.toLong()
@@ -41,6 +39,25 @@ class FinanceController {
             updateItem(item)
         }
     }
+
+    fun addExpenseCategory(item: ExpenseCategory) = transaction {
+        ExpenseCategoryEntity.new {
+            this.categoryName = item.categoryName
+        }.id.value.toLong()
+
+    }
+
+    fun getAllExpenseCategories(): List<ExpenseCategory> = transaction {
+        ExpenseCategoryEntity.all().map(ExpenseCategoryEntity::toExpenseCategory)
+    }
+
+    fun deleteCategory(itemID: Int) =
+        transaction {
+            ExpenseCategoryEntity[itemID].delete()
+            itemID
+        }
+
+
 }
 
 

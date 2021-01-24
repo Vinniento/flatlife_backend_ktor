@@ -11,9 +11,8 @@ import io.ktor.routing.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import wfp2.flatlife.data.models.Chores
-import wfp2.flatlife.data.models.FinanceActivities
-import wfp2.flatlife.data.models.ShoppingItems
+import wfp2.flatlife.controllers.FinanceController
+import wfp2.flatlife.data.models.*
 import wfp2.flatlife.routes.apiRoute
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -30,7 +29,9 @@ fun Application.module(testing: Boolean = false) {
             SchemaUtils.create(Chores)
             SchemaUtils.create(ShoppingItems)
             SchemaUtils.create(FinanceActivities)
+            SchemaUtils.create(ExpenseCategories)
         }
+
     }
 
     install(DefaultHeaders) {
@@ -52,6 +53,7 @@ fun Application.module(testing: Boolean = false) {
     install(Routing) {
         apiRoute()
     }
+
 }
 
 private fun hikari(): HikariDataSource {
