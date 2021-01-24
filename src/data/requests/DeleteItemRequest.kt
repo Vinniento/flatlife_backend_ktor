@@ -1,5 +1,5 @@
-package wfp2.flatlife.requests
+package data.requests
 
 data class DeleteItemRequest(
-    val id: Long
+    val itemID: Long
 )

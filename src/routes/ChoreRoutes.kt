@@ -10,13 +10,9 @@ import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.jetbrains.exposed.sql.*
 import wfp2.flatlife.controllers.ChoreController
-import wfp2.flatlife.controllers.FinanceController
-import wfp2.flatlife.controllers.ShoppingController
 import wfp2.flatlife.data.models.Chore
-import wfp2.flatlife.data.models.FinanceActivity
-import wfp2.flatlife.data.models.ShoppingItem
-import wfp2.flatlife.data.responses.AddTaskResponse
-import wfp2.flatlife.requests.DeleteItemRequest
+import wfp2.flatlife.data.responses.AddItemResponse
+import data.requests.DeleteItemRequest
 import java.util.*
 
 val choreController = ChoreController()
@@ -34,7 +30,7 @@ fun Route.choreRoutes() {
             }
 
             val itemID = choreController.addItem(item)
-            call.respond(OK, AddTaskResponse(true, itemID))
+            call.respond(OK, AddItemResponse(true, itemID))
 
         }
     }
@@ -76,7 +72,7 @@ fun Route.choreRoutes() {
                 call.respond(BadRequest)
                 return@post
             }
-            val itemDeleted = choreController.deleteItem(itemToBeDeleted.id.toInt())
+            val itemDeleted = choreController.deleteItem(itemToBeDeleted.itemID.toInt())
             call.respond(OK, "Deleted = $itemDeleted")
 
 

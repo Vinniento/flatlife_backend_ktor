@@ -11,10 +11,10 @@ import io.ktor.routing.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import wfp2.flatlife.routes.choreRoutes
-import wfp2.flatlife.routes.financeRoutes
-import wfp2.flatlife.routes.shoppingRoutes
-import wfp2.flatlife.routes.taskRoutes
+import wfp2.flatlife.data.models.Chores
+import wfp2.flatlife.data.models.FinanceActivities
+import wfp2.flatlife.data.models.ShoppingItems
+import wfp2.flatlife.routes.apiRoute
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -27,6 +27,9 @@ fun Application.module(testing: Boolean = false) {
         transaction {
 
             SchemaUtils.create(Tasks)
+            SchemaUtils.create(Chores)
+            SchemaUtils.create(ShoppingItems)
+            SchemaUtils.create(FinanceActivities)
         }
     }
 
@@ -47,24 +50,13 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(Routing) {
-        taskRoutes()
-        choreRoutes()
-        financeRoutes()
-        shoppingRoutes()
+        apiRoute()
     }
 }
 
 private fun hikari(): HikariDataSource {
     val config = HikariConfig("/hikari.properties")
-
-    /*  config.driverClassName = "org.h2.Driver"
-      config.jdbcUrl = "jdbc:h2:mem:test2"
-      config.maximumPoolSize = 3
-      config.isAutoCommit = false
-      config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-      config.password = "sa"
-      config.username = "sa"
-      */config.validate()
+    config.validate()
     return HikariDataSource(config)
 }
 

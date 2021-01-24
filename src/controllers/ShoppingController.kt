@@ -12,7 +12,6 @@ class ShoppingController {
 
     fun getAllItemsForUser(): List<ShoppingItem> = transaction {
         ShoppingItemEntity.all().map(ShoppingItemEntity::toShoppingItem)
-        //TODO TaskEntity.all().filter { username in it.owners }.map(TaskEntity::toTask)
     }
 
     fun deleteItem(itemID: Int) =

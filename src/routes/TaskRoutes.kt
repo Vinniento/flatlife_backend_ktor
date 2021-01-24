@@ -11,8 +11,8 @@ import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.jetbrains.exposed.sql.*
 import wfp2.flatlife.controllers.TaskController
-import wfp2.flatlife.data.responses.AddTaskResponse
-import wfp2.flatlife.requests.DeleteItemRequest
+import wfp2.flatlife.data.responses.AddItemResponse
+import data.requests.DeleteItemRequest
 import java.util.*
 
 val taskController = TaskController()
@@ -30,8 +30,7 @@ fun Route.taskRoutes() {
             }
 
             val taskId = taskController.addTask(task)
-            call.respond(OK, AddTaskResponse(true, taskId))
-
+            call.respond(OK, AddItemResponse(true, taskId))
         }
     }
 
@@ -81,7 +80,7 @@ fun Route.taskRoutes() {
                 call.respond(BadRequest)
                 return@post
             }
-            val taskDeleted = taskController.deleteTask(taskToBeDeleted.id.toInt())
+            val taskDeleted = taskController.deleteTask(taskToBeDeleted.itemID.toInt())
             call.respond(OK, "Deleted = $taskDeleted")
 
 

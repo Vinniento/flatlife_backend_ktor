@@ -1,18 +1,18 @@
 package wfp2.flatlife.routes
 
 import com.google.gson.JsonSyntaxException
+import data.requests.DeleteItemRequest
 import io.ktor.application.*
 import io.ktor.http.HttpStatusCode.*
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.http.HttpStatusCode.Companion.OK
 import org.jetbrains.exposed.sql.*
 import wfp2.flatlife.controllers.ShoppingController
 import wfp2.flatlife.data.models.ShoppingItem
-import wfp2.flatlife.data.responses.AddTaskResponse
-import wfp2.flatlife.requests.DeleteItemRequest
+import wfp2.flatlife.data.responses.AddItemResponse
 import java.util.*
 
 val shoppingController = ShoppingController()
@@ -30,7 +30,7 @@ fun Route.shoppingRoutes() {
             }
 
             val itemID = shoppingController.addItem(item)
-            call.respond(OK, AddTaskResponse(true, itemID))
+            call.respond(OK, AddItemResponse(true, itemID))
 
         }
     }
@@ -81,12 +81,9 @@ fun Route.shoppingRoutes() {
                 call.respond(BadRequest)
                 return@post
             }
-            val itemDeleted = shoppingController.deleteItem(itemToBeDeleted.id.toInt())
+            val itemDeleted = shoppingController.deleteItem(itemToBeDeleted.itemID.toInt())
             call.respond(OK, "Deleted = $itemDeleted")
-
 
         }
     }
 }
-
-

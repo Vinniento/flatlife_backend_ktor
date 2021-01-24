@@ -9,7 +9,6 @@ object ShoppingItems : IntIdTable() {
     val name = text("name")
     val isBought = bool("isBought")
     val createdAt = long("createdAt")
-
 }
 
 //represents an entry in the database

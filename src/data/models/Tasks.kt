@@ -30,8 +30,6 @@ data class Task(
     val isComplete: Boolean,
     val isImportant: Boolean,
     val createdAt: Long
-
-
 )
 
 

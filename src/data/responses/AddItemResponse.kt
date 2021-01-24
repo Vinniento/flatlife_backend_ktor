@@ -1,6 +1,6 @@
 package wfp2.flatlife.data.responses
 
-data class AddTaskResponse(
+data class AddItemResponse(
     val successful: Boolean,
-    val taskId: Long
+    val itemID: Long
 )
