@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.IntIdTable
 
 object ShoppingItems : IntIdTable() {
     val name = text("name")
-    val isBought = bool("isComplete")
+    val isBought = bool("isBought")
     val createdAt = long("createdAt")
 
 }
@@ -19,7 +19,7 @@ class ShoppingItemEntity(id: EntityID<Int>) : Entity<Int>(id) {
     var isBought by ShoppingItems.isBought
     var createdAt by ShoppingItems.createdAt
 
-    fun toTask() = ShoppingItem(id.value.toLong(), name, isBought, createdAt)
+    fun toShoppingItem() = ShoppingItem(id.value.toLong(), name, isBought, createdAt)
 }
 
 data class ShoppingItem(

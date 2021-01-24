@@ -6,7 +6,6 @@ import data.models.Tasks
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
-import wfp2.flatlife.requests.AddTaskRequest
 import kotlin.math.absoluteValue
 
 class TaskController {

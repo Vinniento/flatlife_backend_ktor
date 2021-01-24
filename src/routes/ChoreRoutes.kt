@@ -1,7 +1,6 @@
 package wfp2.flatlife.routes
 
 import com.google.gson.JsonSyntaxException
-import data.models.Task
 import io.ktor.application.*
 import io.ktor.http.HttpStatusCode.*
 import io.ktor.request.*
@@ -10,17 +9,22 @@ import io.ktor.routing.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.jetbrains.exposed.sql.*
-import wfp2.flatlife.controllers.TaskController
+import wfp2.flatlife.controllers.ChoreController
+import wfp2.flatlife.controllers.FinanceController
+import wfp2.flatlife.controllers.ShoppingController
+import wfp2.flatlife.data.models.Chore
+import wfp2.flatlife.data.models.FinanceActivity
+import wfp2.flatlife.data.models.ShoppingItem
 import wfp2.flatlife.data.responses.AddTaskResponse
 import wfp2.flatlife.requests.DeleteItemRequest
 import java.util.*
 
-val taskController = TaskController()
-fun Route.taskRoutes() {
-    route("/addTask") {
+val choreController = ChoreController()
+fun Route.choreRoutes() {
+    route("/addItem") {
         post {
-            val task = try {
-                call.receive<Task>()
+            val item = try {
+                call.receive<Chore>()
             } catch (e: ContentTransformationException) {
                 call.respond(BadRequest)
                 return@post
@@ -29,17 +33,17 @@ fun Route.taskRoutes() {
                 return@post
             }
 
-            val taskId = taskController.addTask(task)
-            call.respond(OK, AddTaskResponse(true, taskId))
+            val itemID = choreController.addItem(item)
+            call.respond(OK, AddTaskResponse(true, itemID))
 
         }
     }
 
     //not in use
-    route("/updateTask") {
+    route("/updateItem") {
         post {
-            val task = try {
-                call.receive<Task>()
+            val item = try {
+                call.receive<Chore>()
             } catch (e: ContentTransformationException) {
                 call.respond(BadRequest)
                 return@post
@@ -48,31 +52,22 @@ fun Route.taskRoutes() {
                 return@post
             }
 
-            val taskId = taskController.updateTask(task)
-            call.respond(OK, "ID = $taskId")
+            val itemID = choreController.updateItem(item)
+            call.respond(OK, "ID = $itemID")
         }
     }
 
-    route("/getAllTasks") {
+    route("/getAllItems") {
         get {
             //todo get userId oder username/email vorher
-            val tasks = taskController.getAllTasksForUser()
-            call.respond(OK, tasks)
+            val items = choreController.getAllItemsForUser()
+            call.respond(OK, items)
         }
     }
 
-
-    route("/deleteAllCompletedTasks") {
-        get {
-            //todo get userId oder username/email vorher
-            val tasks = taskController.deleteAllCompletedTasks()
-            call.respond(OK, tasks)
-        }
-    }
-
-    route("/deleteTask") {
+    route("/deleteItem") {
         post {
-            val taskToBeDeleted = try {
+            val itemToBeDeleted = try {
                 call.receive<DeleteItemRequest>()
             } catch (e: ContentTransformationException) {
                 call.respond(BadRequest)
@@ -81,8 +76,8 @@ fun Route.taskRoutes() {
                 call.respond(BadRequest)
                 return@post
             }
-            val taskDeleted = taskController.deleteTask(taskToBeDeleted.id.toInt())
-            call.respond(OK, "Deleted = $taskDeleted")
+            val itemDeleted = choreController.deleteItem(itemToBeDeleted.id.toInt())
+            call.respond(OK, "Deleted = $itemDeleted")
 
 
         }
