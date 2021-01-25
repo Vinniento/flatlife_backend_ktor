@@ -2,22 +2,24 @@ package wfp2.flatlife.routes
 
 import com.google.gson.JsonSyntaxException
 import data.models.Task
+import data.requests.DeleteItemRequest
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.http.HttpStatusCode.*
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.http.HttpStatusCode.Companion.OK
 import org.jetbrains.exposed.sql.*
 import wfp2.flatlife.controllers.TaskController
 import wfp2.flatlife.data.responses.AddItemResponse
-import data.requests.DeleteItemRequest
 import java.util.*
 
 val taskController = TaskController()
 fun Route.taskRoutes() {
     route("/addTask") {
+
         post {
             val task = try {
                 call.receive<Task>()
@@ -33,6 +35,7 @@ fun Route.taskRoutes() {
             call.respond(OK, AddItemResponse(true, taskId))
         }
     }
+
 
     //not in use
     route("/updateTask") {
@@ -53,6 +56,7 @@ fun Route.taskRoutes() {
     }
 
     route("/getAllTasks") {
+
         get {
             //todo get userId oder username/email vorher
             val tasks = taskController.getAllTasksForUser()
@@ -61,7 +65,9 @@ fun Route.taskRoutes() {
     }
 
 
+
     route("/deleteAllCompletedTasks") {
+
         get {
             //todo get userId oder username/email vorher
             val tasks = taskController.deleteAllCompletedTasks()
@@ -69,7 +75,9 @@ fun Route.taskRoutes() {
         }
     }
 
+
     route("/deleteTask") {
+
         post {
             val taskToBeDeleted = try {
                 call.receive<DeleteItemRequest>()
@@ -86,6 +94,7 @@ fun Route.taskRoutes() {
 
         }
     }
+
 }
 
 

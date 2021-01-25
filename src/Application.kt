@@ -11,8 +11,9 @@ import io.ktor.routing.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import wfp2.flatlife.controllers.FinanceController
+import wfp2.flatlife.controllers.checkUserNameForPassword
 import wfp2.flatlife.data.models.*
+import wfp2.flatlife.routes.apiAuthRoutes
 import wfp2.flatlife.routes.apiRoute
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -30,6 +31,7 @@ fun Application.module(testing: Boolean = false) {
             SchemaUtils.create(ShoppingItems)
             SchemaUtils.create(FinanceActivities)
             SchemaUtils.create(ExpenseCategories)
+            SchemaUtils.create(Users)
         }
 
     }
@@ -41,7 +43,7 @@ fun Application.module(testing: Boolean = false) {
     initDB()
 
     install(Authentication) {
-        //configureAuth()
+        configureAuth()
     }
 
     install(ContentNegotiation) {
@@ -51,7 +53,10 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(Routing) {
-        apiRoute()
+        authenticate {
+            apiRoute()
+        }
+        apiAuthRoutes()
     }
 
 }
@@ -66,11 +71,11 @@ private fun Authentication.Configuration.configureAuth() {
     basic {
         realm = "Note Server"
         validate { creds ->
-            val email = creds.name
+            val username = creds.name
             val password = creds.password
-            //if (checkPasswordForEmail(email, password)) {
-            UserIdPrincipal(email)
-            //} else null
+            if (checkUserNameForPassword(username, password)) {
+                UserIdPrincipal(username)
+            } else null
         }
     }
 }
